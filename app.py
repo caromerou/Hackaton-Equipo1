@@ -14,7 +14,7 @@ def show_login_form():
         body {
             margin: 0;
             font-family: Arial, sans-serif;
-            background-color: #4CAF50; /* Fondo verde de la página */
+            background-color: #4CAF50; /* Fondo verde para toda la página */
         }
         .login-container {
             display: flex;
@@ -23,7 +23,6 @@ def show_login_form():
             height: 100vh; /* Altura completa de la ventana del navegador */
             width: 100%;
             position: relative;
-            background-color: #4CAF50; /* Fondo verde para el contenedor */
         }
         .login-form {
             display: flex;
@@ -33,9 +32,8 @@ def show_login_form():
             text-align: center;
             padding: 30px;
             border-radius: 12px;
-            background-color: #ffffff;
+            background-color: #ffffff; /* Fondo blanco para el formulario */
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-            position: absolute;
         }
         .login-form h2 {
             color: #4CAF50; /* Color verde para el título */
@@ -119,5 +117,3 @@ if st.session_state.authenticated:
     st.markdown('<div class="title">App para subir, consultar, editar, eliminar y graficar archivos CSV</div>', unsafe_allow_html=True)
 else:
     show_login_form()
-
-
