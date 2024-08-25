@@ -22,8 +22,9 @@ def show_login_form():
             align-items: center;
             height: 100vh;  /* Altura completa de la ventana del navegador */
             background-image: url('https://www.uaesp.gov.co/sites/default/files/assets/cabezote.png'); /* Imagen de fondo */
-            background-size: cover;
+            background-size: cover; /* Ajusta el tamaño de la imagen para cubrir el contenedor */
             background-position: center;
+            background-repeat: no-repeat; /* Evita que la imagen se repita */
         }
         .login-form {
             display: flex;
