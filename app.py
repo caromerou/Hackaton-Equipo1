@@ -21,15 +21,7 @@ def show_login_form():
             justify-content: center;
             align-items: center;
             height: 100vh; /* Altura completa de la ventana del navegador */
-            background-color: #f0f0f0; /* Color de fondo de la página */
-        }
-        .banner {
-            width: 100%;
-            height: 150px; /* Altura fija para el banner */
-            background-image: url('https://p16.tiktokcdn.com/tos-maliva-avt-0068/f79ba6f0f7c5170a0556c07f6310ff94~c5_720x720.jpeg'); /* Nueva imagen de fondo del banner */
-            background-size: cover; /* Ajusta el tamaño de la imagen para cubrir el contenedor */
-            background-position: center;
-            background-repeat: no-repeat; /* Evita que la imagen se repita */
+            background-color: #4CAF50; /* Color de fondo verde */
         }
         .login-form {
             display: flex;
@@ -41,8 +33,6 @@ def show_login_form():
             border-radius: 10px;
             background-color: rgba(255, 255, 255, 0.9); /* Fondo blanco con opacidad */
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-            position: relative;
-            top: -50px; /* Ajusta la posición para que el formulario esté más cerca del banner */
         }
         .login-form h2 {
             color: #4CAF50;
@@ -81,7 +71,6 @@ def show_login_form():
     """, unsafe_allow_html=True)
     
     st.markdown('<div class="login-container">', unsafe_allow_html=True)
-    st.markdown('<div class="banner"></div>', unsafe_allow_html=True)
     st.markdown('<div class="login-form">', unsafe_allow_html=True)
     
     st.markdown('<h2>Inicio de Sesión</h2>', unsafe_allow_html=True)
@@ -203,5 +192,5 @@ if st.session_state.authenticated:
                 st.warning("Selecciona columnas válidas para el gráfico.")
 
 else:
-    # Muestra el formulario de inicio de sesión estilizado con banner superior
+    # Muestra el formulario de inicio de sesión estilizado con fondo verde
     show_login_form()
