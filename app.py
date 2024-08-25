@@ -2,7 +2,7 @@ import streamlit as st
 import pandas as pd
 
 # Configuración de usuarios y contraseñas
-USERS = {"admin": "123"}  # Puedes añadir más usuarios aquí
+USERS = {"admin": "password123"}  # Puedes añadir más usuarios aquí
 
 def authenticate(username, password):
     return USERS.get(username) == password
@@ -21,7 +21,9 @@ def show_login_form():
             justify-content: center;
             align-items: center;
             height: 100vh;  /* Altura completa de la ventana del navegador */
-            background-color: #f7f7f7;
+            background-image: url('https://www.uaesp.gov.co/sites/default/files/assets/cabezote.png'); /* Imagen de fondo */
+            background-size: cover;
+            background-position: center;
         }
         .login-form {
             display: flex;
@@ -31,7 +33,7 @@ def show_login_form():
             text-align: center;
             padding: 30px;
             border-radius: 10px;
-            background-color: #ffffff;
+            background-color: rgba(255, 255, 255, 0.9); /* Fondo blanco con opacidad */
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
         }
         .login-form h2 {
@@ -191,5 +193,6 @@ if st.session_state.authenticated:
                 st.warning("Selecciona columnas válidas para el gráfico.")
 
 else:
-    # Muestra el formulario de inicio de sesión estilizado
+    # Muestra el formulario de inicio de sesión estilizado con imagen de fondo
     show_login_form()
+
