@@ -11,13 +11,17 @@ def authenticate(username, password):
 def show_login_form():
     st.markdown("""
     <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+        }
         .login-container {
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
             height: 100vh;  /* Altura completa de la ventana del navegador */
-            background-color: #f0f0f0;
+            background-color: #f7f7f7;
         }
         .login-form {
             display: flex;
@@ -25,21 +29,50 @@ def show_login_form():
             width: 100%;
             max-width: 400px;
             text-align: center;
-            padding: 20px;
-            border-radius: 8px;
+            padding: 30px;
+            border-radius: 10px;
             background-color: #ffffff;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        .login-form h2 {
+            color: #4CAF50;
+            margin-bottom: 20px;
         }
         .login-form input {
-            margin-bottom: 10px;
+            margin-bottom: 15px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
         }
         .login-form button {
-            margin-top: 10px;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            background-color: #4CAF50;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        .login-form button:hover {
+            background-color: #45a049;
+        }
+        .login-form .message {
+            margin-top: 15px;
+            font-size: 14px;
+        }
+        .login-form .error {
+            color: #d9534f;
+        }
+        .login-form .success {
+            color: #5bc0de;
         }
     </style>
     """, unsafe_allow_html=True)
     
     st.markdown('<div class="login-container"><div class="login-form">', unsafe_allow_html=True)
+    
+    st.markdown('<h2>Inicio de Sesión</h2>', unsafe_allow_html=True)
     
     username = st.text_input("Nombre de usuario")
     password = st.text_input("Contraseña", type="password")
@@ -50,9 +83,10 @@ def show_login_form():
             st.session_state.login_message = "Inicio de sesión exitoso"
         else:
             st.session_state.login_message = "Nombre de usuario o contraseña incorrectos"
-
+    
     if 'login_message' in st.session_state:
-        st.markdown(f"<p>{st.session_state.login_message}</p>", unsafe_allow_html=True)
+        message_class = 'success' if 'exitoso' in st.session_state.login_message.lower() else 'error'
+        st.markdown(f"<p class='message {message_class}'>{st.session_state.login_message}</p>", unsafe_allow_html=True)
     
     st.markdown('</div></div>', unsafe_allow_html=True)
 
@@ -157,6 +191,5 @@ if st.session_state.authenticated:
                 st.warning("Selecciona columnas válidas para el gráfico.")
 
 else:
-    # Muestra el formulario de inicio de sesión centrado
+    # Muestra el formulario de inicio de sesión estilizado
     show_login_form()
-
