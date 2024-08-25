@@ -9,7 +9,7 @@ def authenticate(username, password):
 
 # Función para mostrar el formulario de inicio de sesión
 def show_login_form():
-    st.sidebar.markdown("""
+    st.markdown("""
     <style>
         .login-container {
             display: flex;
@@ -17,33 +17,44 @@ def show_login_form():
             justify-content: center;
             align-items: center;
             height: 100vh;  /* Altura completa de la ventana del navegador */
+            background-color: #f0f0f0;
         }
         .login-form {
             display: flex;
             flex-direction: column;
             width: 100%;
-            max-width: 300px;
+            max-width: 400px;
             text-align: center;
+            padding: 20px;
+            border-radius: 8px;
+            background-color: #ffffff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
         .login-form input {
             margin-bottom: 10px;
         }
+        .login-form button {
+            margin-top: 10px;
+        }
     </style>
     """, unsafe_allow_html=True)
     
-    st.sidebar.markdown('<div class="login-container"><div class="login-form">', unsafe_allow_html=True)
+    st.markdown('<div class="login-container"><div class="login-form">', unsafe_allow_html=True)
     
-    username = st.sidebar.text_input("Nombre de usuario")
-    password = st.sidebar.text_input("Contraseña", type="password")
+    username = st.text_input("Nombre de usuario")
+    password = st.text_input("Contraseña", type="password")
     
-    st.sidebar.markdown('</div></div>', unsafe_allow_html=True)
-    
-    if st.sidebar.button("Iniciar sesión"):
+    if st.button("Iniciar sesión"):
         if authenticate(username, password):
             st.session_state.authenticated = True
-            st.sidebar.success("Inicio de sesión exitoso")
+            st.session_state.login_message = "Inicio de sesión exitoso"
         else:
-            st.sidebar.error("Nombre de usuario o contraseña incorrectos")
+            st.session_state.login_message = "Nombre de usuario o contraseña incorrectos"
+
+    if 'login_message' in st.session_state:
+        st.markdown(f"<p>{st.session_state.login_message}</p>", unsafe_allow_html=True)
+    
+    st.markdown('</div></div>', unsafe_allow_html=True)
 
 # Verifica si el usuario está autenticado
 if 'authenticated' not in st.session_state:
@@ -146,6 +157,6 @@ if st.session_state.authenticated:
                 st.warning("Selecciona columnas válidas para el gráfico.")
 
 else:
-    # Muestra el formulario de inicio de sesión
+    # Muestra el formulario de inicio de sesión centrado
     show_login_form()
 
