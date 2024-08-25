@@ -1,51 +1,25 @@
 import streamlit as st
-import pyexcel as p
+import pandas as pd
 
 # Título de la aplicación
-st.title("Subir Archivos con Streamlit usando pyexcel")
+st.title('Sube y Visualiza tu Archivo')
 
-# Subir archivo
-uploaded_file = st.file_uploader("Selecciona un archivo", type=["csv", "xlsx", "txt", "json"])
+# Carga del archivo
+uploaded_file = st.file_uploader("Elige un archivo CSV", type="csv")
 
-# Mostrar contenido del archivo subido
+# Verifica si se ha subido un archivo
 if uploaded_file is not None:
-    file_details = {
-        "Filename": uploaded_file.name,
-        "FileType": uploaded_file.type,
-        "FileSize": uploaded_file.size
-    }
-    
-    st.write("Detalles del archivo:")
-    st.json(file_details)
-    
-    # Leer y mostrar contenido si es un archivo CSV
-    if uploaded_file.type == "text/csv":
-        csv_data = uploaded_file.read().decode("utf-8")
-        st.write("Contenido del archivo CSV:")
-        st.text(csv_data)
-    
-    # Leer y mostrar contenido si es un archivo Excel usando pyexcel
-    elif uploaded_file.type == "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet":
-        # Leer el archivo Excel usando pyexcel
-        sheet = p.get_sheet(file_type='xlsx', file_content=uploaded_file.read())
-        data = sheet.to_array()
-        st.write("Contenido del archivo Excel:")
-        st.table(data)
-    
-    # Leer y mostrar contenido si es un archivo de texto
-    elif uploaded_file.type == "text/plain":
-        string_data = uploaded_file.read().decode("utf-8")
-        st.write("Contenido del archivo de texto:")
-        st.text(string_data)
-    
-    # Leer y mostrar contenido si es un archivo JSON
-    elif uploaded_file.type == "application/json":
-        json_data = json.load(uploaded_file)
-        st.write("Contenido del archivo JSON:")
-        st.json(json_data)
-else:
-    st.write("No se ha subido ningún archivo.")
+    # Lee el archivo CSV en un DataFrame de pandas
+    df = pd.read_csv(uploaded_file)
 
-        
-        
-            
+    # Muestra los primeros 5 registros del DataFrame
+    st.write("Aquí están los primeros 5 registros del archivo:")
+    st.write(df.head())
+    
+    # Muestra el DataFrame completo (opcional, puede ser muy grande)
+    if st.checkbox("Mostrar el DataFrame completo"):
+        st.write(df)
+
+    
+    
+       
