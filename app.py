@@ -26,7 +26,7 @@ def show_login_form():
         .banner {
             width: 100%;
             height: 150px; /* Altura fija para el banner */
-            background-image: url('https://www.uaesp.gov.co/sites/default/files/assets/cabezote.png'); /* Imagen de fondo del banner */
+            background-image: url('https://p16.tiktokcdn.com/tos-maliva-avt-0068/f79ba6f0f7c5170a0556c07f6310ff94~c5_720x720.jpeg'); /* Nueva imagen de fondo del banner */
             background-size: cover; /* Ajusta el tamaño de la imagen para cubrir el contenedor */
             background-position: center;
             background-repeat: no-repeat; /* Evita que la imagen se repita */
@@ -205,5 +205,3 @@ if st.session_state.authenticated:
 else:
     # Muestra el formulario de inicio de sesión estilizado con banner superior
     show_login_form()
-
-
