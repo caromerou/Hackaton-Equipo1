@@ -2,7 +2,7 @@ import streamlit as st
 import pandas as pd
 
 # Configuración de usuarios y contraseñas
-USERS = {"admin": "123"}  # Puedes añadir más usuarios aquí
+USERS = {"admin": "password123"}  # Puedes añadir más usuarios aquí
 
 def authenticate(username, password):
     return USERS.get(username) == password
@@ -18,11 +18,22 @@ def show_login_form():
         }
         .login-container {
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
             height: 100vh; /* Altura completa de la ventana del navegador */
             width: 100%;
             position: relative;
+        }
+        .login-header {
+            width: 100%;
+            max-width: 600px;
+            margin-bottom: 20px;
+        }
+        .login-header img {
+            width: 100%; /* Ancho completo de la imagen */
+            height: auto; /* Mantiene la relación de aspecto */
+            border-radius: 8px;
         }
         .login-form {
             display: flex;
@@ -73,7 +84,11 @@ def show_login_form():
     </style>
     """, unsafe_allow_html=True)
     
-    st.markdown('<div class="login-container"><div class="login-form">', unsafe_allow_html=True)
+    st.markdown('<div class="login-container">', unsafe_allow_html=True)
+    
+    st.markdown('<div class="login-header"><img src="https://bogota.gov.co/sites/default/files/2021-01/uasesp.jpg" alt="UAESP"></div>', unsafe_allow_html=True)
+    
+    st.markdown('<div class="login-form">', unsafe_allow_html=True)
     
     st.markdown('<h2>Inicio de Sesión</h2>', unsafe_allow_html=True)
     
