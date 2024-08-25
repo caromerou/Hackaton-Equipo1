@@ -14,25 +14,22 @@ def show_login_form():
         body {
             margin: 0;
             font-family: Arial, sans-serif;
+            background-color: #4CAF50; /* Fondo verde */
         }
         .login-container {
             display: flex;
-            flex-direction: column;
             justify-content: center;
             align-items: center;
             height: 100vh; /* Altura completa de la ventana del navegador */
-            background-color: #4CAF50; /* Color de fondo verde */
         }
         .login-form {
-            display: flex;
-            flex-direction: column;
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
             width: 100%;
             max-width: 400px;
             text-align: center;
-            padding: 30px;
-            border-radius: 10px;
-            background-color: rgba(255, 255, 255, 0.9); /* Fondo blanco con opacidad */
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
         }
         .login-form h2 {
             color: #4CAF50;
@@ -44,6 +41,7 @@ def show_login_form():
             border: 1px solid #ddd;
             border-radius: 5px;
             font-size: 16px;
+            width: calc(100% - 22px); /* Ajusta el ancho de los campos de entrada */
         }
         .login-form button {
             padding: 10px;
@@ -53,6 +51,7 @@ def show_login_form():
             color: white;
             font-size: 16px;
             cursor: pointer;
+            width: 100%; /* Ancho completo del botón */
         }
         .login-form button:hover {
             background-color: #45a049;
@@ -192,5 +191,5 @@ if st.session_state.authenticated:
                 st.warning("Selecciona columnas válidas para el gráfico.")
 
 else:
-    # Muestra el formulario de inicio de sesión estilizado con fondo verde
+    # Muestra el formulario de inicio de sesión estilizado con fondo verde fuera del cuadrado
     show_login_form()
