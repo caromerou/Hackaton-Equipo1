@@ -2,7 +2,7 @@ import streamlit as st
 import pandas as pd
 
 # Configuración de usuarios y contraseñas
-USERS = {"admin": "123"}  # Puedes añadir más usuarios aquí
+USERS = {"admin": "password123"}  # Puedes añadir más usuarios aquí
 
 def authenticate(username, password):
     return USERS.get(username) == password
@@ -174,27 +174,74 @@ def show_upload_page():
     uploaded_file = st.file_uploader("Elige un archivo CSV", type="csv")
 
     if uploaded_file is not None:
-        # Lee el archivo CSV en un DataFrame de pandas
-        df = pd.read_csv(uploaded_file)
-        st.write("Datos cargados:")
-        st.write(df.head())
+        st.session_state.df = pd.read_csv(uploaded_file)
+        st.session_state.file_name = uploaded_file.name
+        st.success("Archivo cargado exitosamente!")
     
     st.markdown('</div>', unsafe_allow_html=True)
 
-# Verifica si el usuario está autenticado
-if 'authenticated' not in st.session_state:
-    st.session_state.authenticated = False
+def show_data_management_page():
+    st.markdown("""
+    <style>
+        .data-management-container {
+            padding: 20px;
+        }
+        .data-management-title {
+            color: #4CAF50;
+            font-size: 24px;
+            font-weight: bold;
+        }
+    </style>
+    """, unsafe_allow_html=True)
+    
+    st.markdown('<div class="data-management-container">', unsafe_allow_html=True)
+    
+    st.markdown('<div class="data-management-title">Gestión de Datos</div>', unsafe_allow_html=True)
 
-# Inicializa el estado de la página
-if 'page' not in st.session_state:
-    st.session_state.page = "home"
-
-if st.session_state.authenticated:
-    if st.session_state.page == "home":
-        show_home_page()
-    elif st.session_state.page == "upload":
-        show_upload_page()
-else:
-    show_login_form()
-
-
+    if 'df' in st.session_state and not st.session_state.df.empty:
+        st.write("Datos cargados:")
+        st.write(st.session_state.df.head())
+        
+        st.markdown("### Editar Datos")
+        edit_index = st.number_input("Número de índice para editar", min_value=0, max_value=len(st.session_state.df)-1, step=1)
+        edited_row = st.session_state.df.iloc[edit_index]
+        st.write("Fila actual:")
+        st.write(edited_row)
+        
+        # Campos para editar
+        new_values = {}
+        for col in st.session_state.df.columns:
+            new_value = st.text_input(f"Nuevo valor para '{col}'", value=edited_row[col])
+            new_values[col] = new_value
+        
+        if st.button("Actualizar fila"):
+            st.session_state.df.loc[edit_index] = new_values
+            st.success("Fila actualizada exitosamente!")
+            st.write(st.session_state.df.iloc[edit_index])
+        
+        st.markdown("### Eliminar Datos")
+        delete_index = st.number_input("Número de índice para eliminar", min_value=0, max_value=len(st.session_state.df)-1, step=1)
+        if st.button("Eliminar fila"):
+            st.session_state.df = st.session_state.df.drop(delete_index).reset_index(drop=True)
+            st.success("Fila eliminada exitosamente!")
+            st.write("Aquí está el DataFrame actualizado:")
+            st.write(st.session_state.df)
+        
+        st.markdown("### Visualizar Datos")
+        if st.checkbox("Mostrar gráfico"):
+            x_col = st.selectbox("Selecciona columna para el eje X", st.session_state.df.columns)
+            y_col = st.selectbox("Selecciona columna para el eje Y", st.session_state.df.columns)
+            
+            if x_col and y_col:
+                # Verifica que la columna del eje Y sea numérica
+                if pd.api.types.is_numeric_dtype(st.session_state.df[y_col]):
+                    try:
+                        st.line_chart(st.session_state.df.set_index(x_col)[y_col])
+                    except KeyError as e:
+                        st.error(f"Error al generar el gráfico: {e}")
+                else:
+                    st.error("La columna seleccionada para el eje Y no es numérica.")
+            else:
+                st.warning("Selecciona columnas válidas para el gráfico.")
+    else:
+        st.write("No
