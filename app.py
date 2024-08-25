@@ -1,6 +1,5 @@
 import streamlit as st
 import pandas as pd
-import matplotlib.pyplot as plt
 
 # Título de la aplicación
 st.title('Sube, Edita y Visualiza tu Archivo')
@@ -55,13 +54,9 @@ if uploaded_file is not None:
         x_col = st.selectbox("Selecciona columna para el eje X", df.columns)
         y_col = st.selectbox("Selecciona columna para el eje Y", df.columns)
         
-        # Graficar
-        plt.figure(figsize=(10, 5))
-        plt.plot(df[x_col], df[y_col], marker='o', linestyle='-')
-        plt.xlabel(x_col)
-        plt.ylabel(y_col)
-        plt.title(f'Gráfico de {y_col} vs {x_col}')
-        st.pyplot(plt)
+        # Graficar usando Streamlit
+        if x_col and y_col:
+            st.line_chart(df.set_index(x_col)[y_col])
 
     
     
