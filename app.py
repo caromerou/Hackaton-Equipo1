@@ -117,18 +117,19 @@ if 'page' not in st.session_state:
     st.session_state.page = "home"
 
 def plot_chart(df, x_col, y_col, chart_type):
-    plt.figure(figsize=(10, 6))
+    plt.figure(figsize=(12, 8))
     if chart_type == 'Bar':
-        df.groupby(x_col)[y_col].sum().plot(kind='bar')
-        plt.title(f'Bar Chart of {y_col} vs {x_col}')
+        sns.barplot(data=df, x=x_col, y=y_col, palette='viridis')
+        plt.title(f'Bar Chart of {y_col} vs {x_col}', fontsize=16)
     elif chart_type == 'Histogram':
-        df[y_col].plot(kind='hist', bins=20)
-        plt.title(f'Histogram of {y_col}')
+        sns.histplot(df[y_col], bins=20, kde=True, color='skyblue')
+        plt.title(f'Histogram of {y_col}', fontsize=16)
     elif chart_type == 'Frequency Diagram':
-        sns.histplot(df[y_col], discrete=True)
-        plt.title(f'Frequency Diagram of {y_col}')
-    plt.xlabel(x_col)
-    plt.ylabel(y_col)
+        sns.histplot(df[y_col], discrete=True, color='coral')
+        plt.title(f'Frequency Diagram of {y_col}', fontsize=16)
+    plt.xlabel(x_col, fontsize=14)
+    plt.ylabel(y_col, fontsize=14)
+    plt.grid(True)
     st.pyplot()
 
 if st.session_state.authenticated:
@@ -228,4 +229,5 @@ if st.session_state.authenticated:
 
 else:
     show_login_form()
+
 
