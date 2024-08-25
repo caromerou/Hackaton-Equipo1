@@ -148,4 +148,3 @@ if st.session_state.authenticated:
 else:
     # Muestra el formulario de inicio de sesión
     show_login_form()
-
