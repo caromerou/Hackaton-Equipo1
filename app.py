@@ -108,27 +108,40 @@ def show_login_form():
     
     st.markdown('</div></div>', unsafe_allow_html=True)
 
+# Función para mostrar la página de inicio
+def show_home_page():
+    st.markdown("""
+    <style>
+        .home-container {
+            padding: 20px;
+        }
+        .home-title {
+            color: #4CAF50;
+            font-size: 36px;
+            font-weight: bold;
+        }
+        .home-content {
+            font-size: 18px;
+            color: #333;
+        }
+    </style>
+    """, unsafe_allow_html=True)
+    
+    st.markdown('<div class="home-container">', unsafe_allow_html=True)
+    
+    st.markdown('<div class="home-title">Bienvenido a la Aplicación</div>', unsafe_allow_html=True)
+    st.markdown('<div class="home-content">', unsafe_allow_html=True)
+    st.write("Esta es la página principal de la aplicación. Aquí puedes subir, consultar, editar, eliminar y graficar archivos CSV.")
+    st.write("Utiliza el menú de la barra lateral para navegar a las diferentes secciones de la aplicación.")
+    st.write("¡Espero que disfrutes utilizando la aplicación!")
+    st.markdown('</div></div>', unsafe_allow_html=True)
+
 # Verifica si el usuario está autenticado
 if 'authenticated' not in st.session_state:
     st.session_state.authenticated = False
 
 if st.session_state.authenticated:
-    # Título de la aplicación
-    st.markdown("""
-    <style>
-        .title {
-            color: #4CAF50;
-            font-size: 36px;
-            font-weight: bold;
-        }
-        .header {
-            color: #333;
-            font-size: 24px;
-            font-weight: bold;
-        }
-    </style>
-    """, unsafe_allow_html=True)
-
-    st.markdown('<div class="title">App para subir, consultar, editar, eliminar y graficar archivos CSV</div>', unsafe_allow_html=True)
+    show_home_page()
 else:
     show_login_form()
+
