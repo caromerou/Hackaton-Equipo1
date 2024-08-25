@@ -1,8 +1,10 @@
 import streamlit as st
 import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
 
 # Configuración de usuarios y contraseñas
-USERS = {"admin": "password123"}  # Puedes añadir más usuarios aquí
+USERS = {"admin": "123"}  # Puedes añadir más usuarios aquí
 
 def authenticate(username, password):
     return USERS.get(username) == password
@@ -189,22 +191,44 @@ if st.session_state.authenticated:
     # Visualizar Datos
     elif page == "Visualizar Datos":
         st.header("Visualizar Datos")
-        if not st.session_state.df.empty and st.checkbox("Mostrar gráfico"):
+        if not st.session_state.df.empty:
+            # Selección del tipo de gráfico
+            chart_type = st.selectbox("Selecciona el tipo de gráfico", ["Líneas", "Barras", "Dispersión"])
+
             x_col = st.selectbox("Selecciona columna para el eje X", st.session_state.df.columns)
             y_col = st.selectbox("Selecciona columna para el eje Y", st.session_state.df.columns)
 
             if x_col and y_col:
-                # Verifica que la columna del eje Y sea numérica
-                if pd.api.types.is_numeric_dtype(st.session_state.df[y_col]):
-                    try:
-                        st.line_chart(st.session_state.df.set_index(x_col)[y_col])
-                    except KeyError as e:
-                        st.error(f"Error al generar el gráfico: {e}")
+                # Verifica que la columna del eje Y sea numérica si se selecciona un gráfico que lo requiere
+                if chart_type in ["Líneas", "Barras"] and pd.api.types.is_numeric_dtype(st.session_state.df[y_col]):
+                    fig, ax = plt.subplots()
+                    if chart_type == "Líneas":
+                        ax.plot(st.session_state.df[x_col], st.session_state.df[y_col], marker='o')
+                        ax.set_title(f'Gráfico de Líneas: {x_col} vs {y_col}')
+                        ax.set_xlabel(x_col)
+                        ax.set_ylabel(y_col)
+                    elif chart_type == "Barras":
+                        st.session_state.df.groupby(x_col)[y_col].sum().plot(kind='bar', ax=ax)
+                        ax.set_title(f'Gráfico de Barras: {x_col} vs {y_col}')
+                        ax.set_xlabel(x_col)
+                        ax.set_ylabel(y_col)
+                    st.pyplot(fig)
+
+                elif chart_type == "Dispersión":
+                    if pd.api.types.is_numeric_dtype(st.session_state.df[x_col]) and pd.api.types.is_numeric_dtype(st.session_state.df[y_col]):
+                        fig, ax = plt.subplots()
+                        sns.scatterplot(data=st.session_state.df, x=x_col, y=y_col, ax=ax)
+                        ax.set_title(f'Gráfico de Dispersión: {x_col} vs {y_col}')
+                        ax.set_xlabel(x_col)
+                        ax.set_ylabel(y_col)
+                        st.pyplot(fig)
+                    else:
+                        st.error("Ambas columnas deben ser numéricas para el gráfico de dispersión.")
                 else:
-                    st.error("La columna seleccionada para el eje Y no es numérica.")
+                    st.error("La columna seleccionada para el eje Y debe ser numérica para este tipo de gráfico.")
             else:
                 st.warning("Selecciona columnas válidas para el gráfico.")
-    
+
     # Subir Archivo
     elif page == "Subir Archivo":
         st.header("Subir Archivo CSV")
@@ -218,3 +242,4 @@ if st.session_state.authenticated:
 
 else:
     show_login_form()
+
