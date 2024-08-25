@@ -2,12 +2,11 @@ import streamlit as st
 import pandas as pd
 
 # Configuración de usuarios y contraseñas
-USERS = {"admin": "123"}  # Puedes añadir más usuarios aquí
+USERS = {"admin": "password123"}  # Puedes añadir más usuarios aquí
 
 def authenticate(username, password):
     return USERS.get(username) == password
 
-# Función para mostrar el formulario de inicio de sesión
 def show_login_form():
     st.markdown("""
     <style>
@@ -108,12 +107,12 @@ def show_login_form():
     
     st.markdown('</div></div>', unsafe_allow_html=True)
 
-# Función para mostrar la página de inicio
 def show_home_page():
     st.markdown("""
     <style>
         .home-container {
             padding: 20px;
+            text-align: center;
         }
         .home-title {
             color: #4CAF50;
@@ -123,6 +122,20 @@ def show_home_page():
         .home-content {
             font-size: 18px;
             color: #333;
+            margin-bottom: 20px;
+        }
+        .start-button {
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            background-color: #4CAF50;
+            color: white;
+            font-size: 18px;
+            cursor: pointer;
+            width: 200px;
+        }
+        .start-button:hover {
+            background-color: #45a049;
         }
     </style>
     """, unsafe_allow_html=True)
@@ -134,14 +147,54 @@ def show_home_page():
     st.write("Esta es la página principal de la aplicación. Aquí puedes subir, consultar, editar, eliminar y graficar archivos CSV.")
     st.write("Utiliza el menú de la barra lateral para navegar a las diferentes secciones de la aplicación.")
     st.write("¡Espero que disfrutes utilizando la aplicación!")
-    st.markdown('</div></div>', unsafe_allow_html=True)
+    st.markdown('</div>', unsafe_allow_html=True)
+
+    if st.button("Iniciar"):
+        st.session_state.page = "upload"
+
+    st.markdown('</div>', unsafe_allow_html=True)
+
+def show_upload_page():
+    st.markdown("""
+    <style>
+        .upload-container {
+            padding: 20px;
+        }
+        .upload-title {
+            color: #4CAF50;
+            font-size: 24px;
+            font-weight: bold;
+        }
+    </style>
+    """, unsafe_allow_html=True)
+    
+    st.markdown('<div class="upload-container">', unsafe_allow_html=True)
+    
+    st.markdown('<div class="upload-title">Subir Archivo CSV</div>', unsafe_allow_html=True)
+    uploaded_file = st.file_uploader("Elige un archivo CSV", type="csv")
+
+    if uploaded_file is not None:
+        # Lee el archivo CSV en un DataFrame de pandas
+        df = pd.read_csv(uploaded_file)
+        st.write("Datos cargados:")
+        st.write(df.head())
+    
+    st.markdown('</div>', unsafe_allow_html=True)
 
 # Verifica si el usuario está autenticado
 if 'authenticated' not in st.session_state:
     st.session_state.authenticated = False
 
+# Inicializa el estado de la página
+if 'page' not in st.session_state:
+    st.session_state.page = "home"
+
 if st.session_state.authenticated:
-    show_home_page()
+    if st.session_state.page == "home":
+        show_home_page()
+    elif st.session_state.page == "upload":
+        show_upload_page()
 else:
     show_login_form()
+
 
