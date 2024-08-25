@@ -116,6 +116,21 @@ if 'df' not in st.session_state:
 if 'page' not in st.session_state:
     st.session_state.page = "home"
 
+def plot_chart(df, x_col, y_col, chart_type):
+    plt.figure(figsize=(10, 6))
+    if chart_type == 'Bar':
+        df.groupby(x_col)[y_col].sum().plot(kind='bar')
+        plt.title(f'Bar Chart of {y_col} vs {x_col}')
+    elif chart_type == 'Histogram':
+        df[y_col].plot(kind='hist', bins=20)
+        plt.title(f'Histogram of {y_col}')
+    elif chart_type == 'Frequency Diagram':
+        sns.histplot(df[y_col], discrete=True)
+        plt.title(f'Frequency Diagram of {y_col}')
+    plt.xlabel(x_col)
+    plt.ylabel(y_col)
+    st.pyplot()
+
 if st.session_state.authenticated:
     # Título de la aplicación
     st.markdown("""
@@ -192,43 +207,14 @@ if st.session_state.authenticated:
     elif page == "Visualizar Datos":
         st.header("Visualizar Datos")
         if not st.session_state.df.empty:
-            chart_type = st.selectbox("Selecciona el tipo de gráfico", ["Líneas", "Barras", "Histograma", "Diagrama de Frecuencia"])
+            chart_type = st.selectbox("Selecciona el tipo de gráfico", ["Bar", "Histogram", "Frequency Diagram"])
             x_col = st.selectbox("Selecciona columna para el eje X", st.session_state.df.columns)
             y_col = st.selectbox("Selecciona columna para el eje Y", st.session_state.df.columns)
-
             if x_col and y_col:
-                if chart_type == "Líneas":
-                    if pd.api.types.is_numeric_dtype(st.session_state.df[y_col]):
-                        st.line_chart(st.session_state.df.set_index(x_col)[y_col])
-                    else:
-                        st.error("La columna seleccionada para el eje Y no es numérica.")
-                
-                elif chart_type == "Barras":
-                    if pd.api.types.is_numeric_dtype(st.session_state.df[y_col]):
-                        st.bar_chart(st.session_state.df.set_index(x_col)[y_col])
-                    else:
-                        st.error("La columna seleccionada para el eje Y no es numérica.")
-                
-                elif chart_type == "Histograma":
-                    if pd.api.types.is_numeric_dtype(st.session_state.df[y_col]):
-                        fig, ax = plt.subplots()
-                        ax.hist(st.session_state.df[y_col].dropna(), bins=30, edgecolor='black')
-                        ax.set_title(f'Histograma de {y_col}')
-                        ax.set_xlabel(y_col)
-                        ax.set_ylabel('Frecuencia')
-                        st.pyplot(fig)
-                    else:
-                        st.error("La columna seleccionada no es numérica.")
-                
-                elif chart_type == "Diagrama de Frecuencia":
-                    fig, ax = plt.subplots()
-                    sns.countplot(x=x_col, data=st.session_state.df, ax=ax)
-                    ax.set_title(f'Diagrama de Frecuencia de {x_col}')
-                    st.pyplot(fig)
-                
-                else:
-                    st.warning("Selecciona un tipo de gráfico válido.")
-    
+                plot_chart(st.session_state.df, x_col, y_col, chart_type)
+            else:
+                st.warning("Selecciona columnas válidas para el gráfico.")
+
     # Subir Archivo
     elif page == "Subir Archivo":
         st.header("Subir Archivo CSV")
@@ -242,3 +228,4 @@ if st.session_state.authenticated:
 
 else:
     show_login_form()
+
