@@ -95,6 +95,7 @@ def show_login_form():
         if authenticate(username, password):
             st.session_state.authenticated = True
             st.session_state.login_message = "Inicio de sesión exitoso"
+            st.experimental_rerun()  # Recarga la aplicación para mostrar la página de inicio
         else:
             st.session_state.login_message = "Nombre de usuario o contraseña incorrectos"
 
@@ -243,17 +244,13 @@ def show_visualize_page():
         y_col = st.selectbox("Selecciona columna para el eje Y", st.session_state.df.columns)
 
         if x_col and y_col:
-            # Verifica que la columna del eje Y sea numérica
-            if pd.api.types.is_numeric_dtype(st.session_state.df[y_col]):
-                try:
-                    st.line_chart(st.session_state.df.set_index(x_col)[y_col])
-                except KeyError as e:
-                    st.error(f"Error al generar el gráfico: {e}")
-            else:
-                st.error("La columna seleccionada para el eje Y no es numérica.")
+            try:
+                st.line_chart(st.session_state.df.set_index(x_col)[y_col])
+            except KeyError as e:
+                st.error(f"Error al generar el gráfico: {e}")
         else:
             st.warning("Selecciona columnas válidas para el gráfico.")
-    
+
     st.markdown('</div>', unsafe_allow_html=True)
 
 # Inicializa el estado de sesión
@@ -290,7 +287,7 @@ if st.session_state.authenticated:
     """, unsafe_allow_html=True)
 
     st.markdown('<div class="nav-bar">', unsafe_allow_html=True)
-    st.markdown('<a href="javascript:window.location.reload();">Inicio</a>', unsafe_allow_html=True)
+    st.markdown('<a href="?page=home">Inicio</a>', unsafe_allow_html=True)
     st.markdown('<a href="?page=upload">Subir Archivo</a>', unsafe_allow_html=True)
     st.markdown('<a href="?page=edit">Editar Datos</a>', unsafe_allow_html=True)
     st.markdown('<a href="?page=delete">Eliminar Datos</a>', unsafe_allow_html=True)
