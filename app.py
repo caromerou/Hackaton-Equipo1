@@ -1,6 +1,6 @@
 import streamlit as st
 import pandas as pd
-import matplotlib.pyplot as plt
+import plotly.express as px
 
 # Título de la aplicación
 st.title('Sube, Edita, Elimina y Visualiza tu Archivo')
@@ -41,15 +41,12 @@ if uploaded_file is not None:
         if not edited_df.empty:
             # Ejemplo: Crear un gráfico de barras de una columna numérica (ajusta según tus datos)
             if 'Número' in edited_df.columns:
-                fig, ax = plt.subplots()
-                edited_df['Número'].value_counts().plot(kind='bar', ax=ax)
-                ax.set_title('Distribución de la columna "Número"')
-                st.pyplot(fig)
+                fig = px.bar(edited_df, x=edited_df.index, y='Número', title='Distribución de la columna "Número"')
+                st.plotly_chart(fig)
             else:
                 st.warning('No se encontró una columna numérica para graficar.')
         else:
             st.warning('El DataFrame está vacío, no se puede generar el gráfico.')
-
 
     
     
