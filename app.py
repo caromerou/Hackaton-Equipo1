@@ -177,6 +177,7 @@ def show_upload_page():
         st.session_state.df = pd.read_csv(uploaded_file)
         st.session_state.file_name = uploaded_file.name
         st.success("Archivo cargado exitosamente!")
+        st.session_state.page = "data_management"
     
     st.markdown('</div>', unsafe_allow_html=True)
 
@@ -244,4 +245,24 @@ def show_data_management_page():
             else:
                 st.warning("Selecciona columnas válidas para el gráfico.")
     else:
-        st.write("No
+        st.write("No hay datos disponibles. Por favor, sube un archivo CSV.")
+
+# Inicialización de la sesión
+if 'authenticated' not in st.session_state:
+    st.session_state.authenticated = False
+if 'page' not in st.session_state:
+    st.session_state.page = 'login'
+
+# Mostrar la vista según el estado de autenticación
+if st.session_state.authenticated:
+    if st.session_state.page == 'login':
+        st.session_state.page = 'home'
+    if st.session_state.page == 'home':
+        show_home_page()
+    elif st.session_state.page == 'upload':
+        show_upload_page()
+    elif st.session_state.page == 'data_management':
+        show_data_management_page()
+else:
+    show_login_form()
+
