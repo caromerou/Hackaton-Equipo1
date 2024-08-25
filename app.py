@@ -1,10 +1,8 @@
 import streamlit as st
-import csv
-import json
-from io import StringIO, BytesIO
+import pyexcel as p
 
 # Título de la aplicación
-st.title("Subir Archivos con Streamlit (sin pandas ni openpyxl)")
+st.title("Subir Archivos con Streamlit usando pyexcel")
 
 # Subir archivo
 uploaded_file = st.file_uploader("Selecciona un archivo", type=["csv", "xlsx", "txt", "json"])
@@ -22,12 +20,17 @@ if uploaded_file is not None:
     
     # Leer y mostrar contenido si es un archivo CSV
     if uploaded_file.type == "text/csv":
-        # Usar csv.reader para leer el archivo CSV
-        stringio = StringIO(uploaded_file.getvalue().decode("utf-8"))
-        reader = csv.reader(stringio)
-        csv_data = list(reader)
+        csv_data = uploaded_file.read().decode("utf-8")
         st.write("Contenido del archivo CSV:")
-        st.table(csv_data)
+        st.text(csv_data)
+    
+    # Leer y mostrar contenido si es un archivo Excel usando pyexcel
+    elif uploaded_file.type == "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet":
+        # Leer el archivo Excel usando pyexcel
+        sheet = p.get_sheet(file_type='xlsx', file_content=uploaded_file.read())
+        data = sheet.to_array()
+        st.write("Contenido del archivo Excel:")
+        st.table(data)
     
     # Leer y mostrar contenido si es un archivo de texto
     elif uploaded_file.type == "text/plain":
@@ -40,21 +43,9 @@ if uploaded_file is not None:
         json_data = json.load(uploaded_file)
         st.write("Contenido del archivo JSON:")
         st.json(json_data)
-    
-    # Leer y mostrar contenido si es un archivo Excel (sin openpyxl)
-    elif uploaded_file.type == "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet":
-        # Usar BytesIO para leer el archivo binario
-        bytes_data = BytesIO(uploaded_file.read())
-        st.write("Contenido del archivo Excel:")
-        st.write("Visualización directa no soportada sin `openpyxl`, descarga para ver el contenido.")
-        st.download_button(
-            label="Descargar archivo Excel",
-            data=bytes_data,
-            file_name=uploaded_file.name,
-            mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-        )
 else:
     st.write("No se ha subido ningún archivo.")
 
-
-    
+        
+        
+            
