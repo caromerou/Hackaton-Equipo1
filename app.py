@@ -2,7 +2,7 @@ import streamlit as st
 import pandas as pd
 
 # Título de la aplicación
-st.title('App para subir tu archivo!, Acà puedes consultarlo, editarlo, actualizarlo, eliminasrlo y graficarlo')
+st.title('App para subir tu archivo!, Acá puedes consultarlo, editarlo, actualizarlo, eliminarlo y graficar')
 
 # Carga del archivo
 uploaded_file = st.file_uploader("Elige un archivo CSV", type="csv")
