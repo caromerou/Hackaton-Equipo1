@@ -2,34 +2,55 @@ import streamlit as st
 import pandas as pd
 
 # Título de la aplicación
-st.title('App para subir tu archivo, consultarlo, editar, eliminar y graficar')
+st.markdown("""
+<style>
+    .title {
+        color: #4CAF50;
+        font-size: 36px;
+        font-weight: bold;
+    }
+    .header {
+        color: #333;
+        font-size: 24px;
+        font-weight: bold;
+    }
+</style>
+""", unsafe_allow_html=True)
+
+st.markdown('<div class="title">App para subir, consultar, editar, eliminar y graficar archivos CSV</div>', unsafe_allow_html=True)
+
+# Barra de navegación
+st.sidebar.header("Navegación")
+page = st.sidebar.radio("Selecciona una sección:", ["Inicio", "Editar Datos", "Eliminar Datos", "Visualizar Datos"])
 
 # Carga del archivo
-uploaded_file = st.file_uploader("Elige un archivo CSV", type="csv")
+uploaded_file = st.sidebar.file_uploader("Elige un archivo CSV", type="csv")
 
 # Inicializa el DataFrame en el estado de sesión
 if 'df' not in st.session_state:
     st.session_state.df = pd.DataFrame()
 
-# Verifica si se ha subido un archivo
 if uploaded_file is not None:
     # Lee el archivo CSV en un DataFrame de pandas
     st.session_state.df = pd.read_csv(uploaded_file)
-    
-    # Muestra los primeros 5 registros del DataFrame
-    st.write("Aquí están los primeros 5 registros del archivo:")
-    st.write(st.session_state.df.head())
-    
-    # Muestra el DataFrame completo (opcional, puede ser muy grande)
-    if st.checkbox("Mostrar el DataFrame completo"):
-        st.write(st.session_state.df)
-    
-    # Funcionalidad para editar datos
-    st.subheader("Editar Datos")
-    
+    st.session_state.file_name = uploaded_file.name
+
+# Inicio
+if page == "Inicio":
+    st.header("Bienvenido")
+    st.write("Sube un archivo CSV y usa las opciones en el menú de la barra lateral para editar, eliminar o visualizar datos.")
+    if not st.session_state.df.empty:
+        st.write("Datos cargados de:", st.session_state.file_name)
+        st.write("Aquí están los primeros 5 registros del archivo:")
+        st.write(st.session_state.df.head())
+        if st.checkbox("Mostrar el DataFrame completo"):
+            st.write(st.session_state.df)
+
+# Editar Datos
+elif page == "Editar Datos":
+    st.header("Editar Datos")
     if not st.session_state.df.empty:
         edit_index = st.number_input("Número de índice para editar", min_value=0, max_value=len(st.session_state.df)-1, step=1)
-        
         edited_row = st.session_state.df.iloc[edit_index]
         st.write("Fila actual:")
         st.write(edited_row)
@@ -42,23 +63,23 @@ if uploaded_file is not None:
         
         if st.button("Actualizar fila"):
             st.session_state.df.loc[edit_index] = new_values
-            st.write("Fila actualizada:")
+            st.success("Fila actualizada exitosamente!")
             st.write(st.session_state.df.iloc[edit_index])
-    
-    # Funcionalidad para eliminar datos
-    st.subheader("Eliminar Datos")
-    
+
+# Eliminar Datos
+elif page == "Eliminar Datos":
+    st.header("Eliminar Datos")
     if not st.session_state.df.empty:
         delete_index = st.number_input("Número de índice para eliminar", min_value=0, max_value=len(st.session_state.df)-1, step=1)
-        
         if st.button("Eliminar fila"):
             st.session_state.df = st.session_state.df.drop(delete_index).reset_index(drop=True)
-            st.write("Fila eliminada. Aquí está el DataFrame actualizado:")
+            st.success("Fila eliminada exitosamente!")
+            st.write("Aquí está el DataFrame actualizado:")
             st.write(st.session_state.df)
-    
-    # Consolidar datos en un gráfico
-    st.subheader("Visualizar Datos")
-    
+
+# Visualizar Datos
+elif page == "Visualizar Datos":
+    st.header("Visualizar Datos")
     if not st.session_state.df.empty and st.checkbox("Mostrar gráfico"):
         x_col = st.selectbox("Selecciona columna para el eje X", st.session_state.df.columns)
         y_col = st.selectbox("Selecciona columna para el eje Y", st.session_state.df.columns)
@@ -74,4 +95,5 @@ if uploaded_file is not None:
                 st.error("La columna seleccionada para el eje Y no es numérica.")
         else:
             st.warning("Selecciona columnas válidas para el gráfico.")
+
 
