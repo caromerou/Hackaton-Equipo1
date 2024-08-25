@@ -2,7 +2,7 @@ import streamlit as st
 import pandas as pd
 
 # Configuración de usuarios y contraseñas
-USERS = {"admin": "password123"}  # Puedes añadir más usuarios aquí
+USERS = {"admin": "123"}  # Puedes añadir más usuarios aquí
 
 def authenticate(username, password):
     return USERS.get(username) == password
